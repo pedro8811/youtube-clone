@@ -3,22 +3,42 @@ import styled from "styled-components";
 
 import ytLogo from "../assets/youtube-icon.svg";
 
-import { HiBars3 } from "react-icons/hi2";
-import { IconButton, Tooltip, Avatar } from "@mui/material";
+import { HiBars3, HiLanguage } from "react-icons/hi2";
+import {
+  IconButton,
+  Tooltip,
+  Avatar,
+  Button
+} from "@mui/material";
 import { IoSearchOutline, IoVideocamOutline } from "react-icons/io5";
-import { BsFillMicFill, BsFillKeyboardFill } from "react-icons/bs";
-import { AiOutlineBell } from "react-icons/ai";
-import {MdOutlineClear} from 'react-icons/md'
+import {
+  BsFillMicFill,
+  BsFillKeyboardFill,
+  BsPersonSquare,
+  BsGearFill,
+  BsShieldShaded
+} from "react-icons/bs";
+import { AiOutlineBell, AiOutlineQuestionCircle, AiOutlineGoogle } from "react-icons/ai";
+import {
+  MdOutlineClear,
+  MdLogout,
+  MdAttachMoney,
+  MdLanguage,
+  MdOutlineFeedback,
+} from "react-icons/md";
 
-import Fade from '@mui/material/Fade';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import Backdrop from "@mui/material/Backdrop";
+import Modal from "@mui/material/Modal";
+import Fade from "@mui/material/Fade";
+import Typography from "@mui/material/Typography";
 
 const Main = styled.div`
   margin: 0px;
+  z-index: 2;
   position: fixed;
   padding: 5px 0px;
-  border-bottom: 1px solid rgb(15,15,15);
+  border-bottom: 1px solid rgb(15, 15, 15);
+  background-color: rgb(15, 15, 15);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   align-items: center;
@@ -63,9 +83,9 @@ const SearchBar = styled.div`
     border: 1px solid #464646;
     padding: 15px;
     font-size: 1rem;
-    font-family: 'Roboto', sans-serif;
+    font-family: "Roboto", sans-serif;
     &::placeholder {
-      font-family: 'Roboto', sans-serif;
+      font-family: "Roboto", sans-serif;
       font-size: 1rem;
     }
   }
@@ -79,8 +99,8 @@ const SearchBar = styled.div`
     border: 1px solid #464646;
     cursor: pointer;
   }
-  #clear-button{
-    background: rgb(15,15,15);
+  #clear-button {
+    background: rgb(15, 15, 15);
     border: none;
     padding-top: 4px;
     margin-bottom: 1px;
@@ -89,8 +109,8 @@ const SearchBar = styled.div`
     position: absolute;
     margin-left: 400px;
     cursor: pointer;
-    &:hover{
-      background: rgba(255,255,255,.2);
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
     }
   }
 `;
@@ -110,7 +130,7 @@ const MainSearch = styled.div`
   #keyboard {
     position: absolute;
     color: #ccc;
-    transition: all .05s ease-in;
+    transition: all 0.05s ease-in;
     &:hover {
       color: #f4f4f4;
       cursor: pointer;
@@ -129,7 +149,7 @@ const Profile = styled.div`
       background-color: rgba(255, 255, 255, 0.1);
     }
   }
-  #profile-icon{
+  #profile-icon {
     height: 40px;
     border-radius: 50%;
     margin-left: 20px;
@@ -139,19 +159,49 @@ const Profile = styled.div`
   }
 `;
 
+const BoxProfile = styled.div`
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 10px;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  padding: 15px;
+  background: rgb(0,0,0);
+  background: linear-gradient(90deg, #2d2d2d 0%, #2b2b2b 5%, #2d2d2d 100%);
+  box-shadow: 0 0 20px #2a2a2a;
+`;
+
+const ProfileLine = styled.div`
+  display: flex;
+  flex-direction: row;
+  padding: 5px;
+  font-size: 1.4em;
+  align-items: center;
+  p {
+    font-size: 1rem;
+    margin: 0;
+    margin-left: 20px;
+  }
+  &:hover {
+    background-color: #434242;
+    cursor: pointer;
+  }
+`;
+
 export default function Topbar() {
   const [search, setSearch] = useState("");
-  const handleChange = (e) => {setSearch(e.target.value)};
-  const handleClear = e => {setSearch('')}
+  const handleChange = (e) => {
+    setSearch(e.target.value);
+  };
+  const handleClear = (e) => {
+    setSearch("");
+  };
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   return (
     <Main>
@@ -185,8 +235,13 @@ export default function Topbar() {
             id="keyboard"
             style={{ marginLeft: search.length > 0 ? "340px" : "390px" }}
           />
-          <button type="reset" id="clear-button" style={{display: search.length > 0 ? 'block' : 'none' }} onClick={handleClear}>
-            <MdOutlineClear/>
+          <button
+            type="reset"
+            id="clear-button"
+            style={{ display: search.length > 0 ? "block" : "none" }}
+            onClick={handleClear}
+          >
+            <MdOutlineClear />
           </button>
           <button id="search-button">
             <IoSearchOutline></IoSearchOutline>
@@ -212,32 +267,87 @@ export default function Topbar() {
           </IconButton>
         </Tooltip>
         <Tooltip title="Perfil">
-          <IconButton style={{padding: 0}}
-             id="fade-button"
-             aria-controls={open ? 'fade-menu' : undefined}
-             aria-haspopup="true"
-             aria-expanded={open ? 'true' : undefined}
-             onClick={handleClick}
-          >
-            <Avatar id="profile-icon">P</Avatar>
+          <IconButton style={{ padding: 0 }} onClick={handleOpen}>
+            <Avatar id="profile-icon"></Avatar>
           </IconButton>
         </Tooltip>
       </Profile>
-      <Menu
-        id="fade-menu"
-        MenuListProps={{
-          'aria-labelledby': 'fade-button',
-        }}
-        sx={{color: 'text.disabled'}}
-        anchorEl={anchorEl}
+
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
         open={open}
         onClose={handleClose}
-        TransitionComponent={Fade}
+        closeAfterTransition
+        disableScrollLock={true}
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
-      </Menu>
+        <Fade in={open}>
+          <BoxProfile >
+            <div style={{ display: "flex", alignItems: "flex-start" }}>
+              <Avatar style={{ marginRight: "10px" }}></Avatar>
+              <div style={{textAlign: 'left'}}>
+                <Typography id="transition-modal-title" variant="h6" component="h2" style={{marginBottom: '10px'}}>
+                  Faça login ou se cadastre!
+                </Typography>
+                <div style={{marginBottom: '10px'}}>
+                  <Button variant="outlined" style={{marginRight: '10px'}}>Login</Button>
+                  <Button variant="outlined">Register</Button>
+                  <Button variant="contained" style={{padding: '11px', marginLeft: '10px'}}><AiOutlineGoogle/></Button>
+                </div>
+                <div style={{marginBottom: '10px'}}>
+
+                </div>
+              </div>
+            </div>
+            <hr />
+            <ProfileLine>
+              <BsPersonSquare />
+              <p>Crie seu canal</p>
+            </ProfileLine>
+            <ProfileLine>
+              <MdLogout />
+              <p>Sair</p>
+            </ProfileLine>
+            <hr />
+            <ProfileLine>
+              <MdAttachMoney />
+              <p>Compras e assinaturas</p>
+            </ProfileLine>
+            <ProfileLine>
+              <HiLanguage />
+              <p>Linguagem: Português</p>
+            </ProfileLine>
+            <ProfileLine>
+              <MdLanguage />
+              <p>Local: Brasil</p>
+            </ProfileLine>
+            <ProfileLine>
+              <BsShieldShaded/>
+              <p>Modo restrito: Ativado</p>
+            </ProfileLine>
+            <hr />
+            <ProfileLine>
+              <BsGearFill />
+              <p>Configurações</p>
+            </ProfileLine>
+            <hr />
+            <ProfileLine>
+              <AiOutlineQuestionCircle />
+              <p>Ajuda</p>
+            </ProfileLine>
+            <ProfileLine>
+              <MdOutlineFeedback />
+              <p>Feedback</p>
+            </ProfileLine>
+          </BoxProfile>
+        </Fade>
+      </Modal>
     </Main>
   );
 }
