@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-
 import ytLogo from "../assets/youtube-icon.svg";
 
 import { HiBars3, HiLanguage } from "react-icons/hi2";

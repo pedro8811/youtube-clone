@@ -11,7 +11,6 @@ import {BiListPlus} from 'react-icons/bi'
 
 const Main = styled.div`
   padding: 0px;
-  /* margin: 0; */
   text-align: right;
   cursor: pointer;
   &:hover {
@@ -32,9 +31,7 @@ const Main = styled.div`
   img {
     transition: all 0.2s ease;
     border-radius: 12px;
-    opacity: 1;
-    /* display: flex;
-    justify-content: left; */
+    box-shadow: inset 0 10px black;
     width: 100%;
   }
   .main-title {

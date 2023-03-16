@@ -10,6 +10,10 @@ const Main = styled.div`
   color: white;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  @media (min-width: 1080px){
+    grid-template-columns: repeat(4, 1fr);
+    grid-column-gap: 30px;
+  }
   grid-column-gap: 30px;
   grid-row-gap: 20px;
   z-index: 1;
